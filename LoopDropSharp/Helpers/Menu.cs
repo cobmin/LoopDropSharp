@@ -55,10 +55,10 @@ namespace LoopDropSharp.Helpers
                 {"utilityEight", "Airdrop the same NFT to any users"},
                 {"utilityNine", "Airdrop the same NFT to any users with different amounts"},
                 {"utilityTen", "Airdrop unique NFTs to any users"},
-                {"utilityEleven", "Airdrop LRC/ETH to any users"},
-                {"utilityTwelve", "Airdrop LRC/ETH to any users with different amounts"},
-                {"utilityThirteen", "LoopPhunks owners and amounts"},
-                {"utilityFourteen", "Send all Nfts owned by banished wallet to the dead address"}
+                {"utilityEleven", "Send all Nfts owned by banished addresses to the dead address"},
+                {"utilityTwelve", "Airdrop LRC/ETH to any users"},
+                {"utilityThirteen", "Airdrop LRC/ETH to any users with different amounts"},
+                {"utilityFourteen", "LoopPhunks Analytics"}
             };
             // Menu of the Utilities. need to be sure to change numbers here and in the CheckUtilityNumber
             Font.SetTextToBlue("This application can currently perform the following:");
@@ -77,12 +77,12 @@ namespace LoopDropSharp.Helpers
             Font.SetTextToWhite($"\t 8. {allUtilities.ElementAt(8).Value}.");
             Font.SetTextToWhite($"\t 9. {allUtilities.ElementAt(9).Value}.");
             Font.SetTextToWhite($"\t 10. {allUtilities.ElementAt(10).Value}.");
-            Font.SetTextToWhite($"\t 14. {allUtilities.ElementAt(14).Value}.");
-            Font.SetTextToDarkPurple("        Crypto");
             Font.SetTextToWhite($"\t 11. {allUtilities.ElementAt(11).Value}.");
+            Font.SetTextToDarkPurple("        Crypto");
             Font.SetTextToWhite($"\t 12. {allUtilities.ElementAt(12).Value}.");
-            Font.SetTextToPurple("     LoopPhunks Stats:");
             Font.SetTextToWhite($"\t 13. {allUtilities.ElementAt(13).Value}.");
+            Font.SetTextToPurple("     LoopPhunks Stats:");
+            Font.SetTextToWhite($"\t 14. {allUtilities.ElementAt(14).Value}.");
             Font.SetTextToPurple("     Tips/FAQs:");
             Font.SetTextToWhite($"\t 0. {allUtilities.ElementAt(0).Value}.");
             Font.SetTextToGreen("Which would you like to do?");

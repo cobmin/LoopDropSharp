@@ -17,10 +17,9 @@ namespace LoopDropSharp.Helpers
         public static async Task CreateExcelFile(LoopExchange loopExchangeData, List<LoopPhunksHolderInformation> nftInformationAndOwner)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            var fileName = new FileInfo(@"C:\Code\LoopPhunksDataCOOL.xlsx");
+            var fileNameLocation = new FileInfo(@".\LoopPhunksDataCOOL.xlsx");
 
-            await SaveExcelFile(loopExchangeData, nftInformationAndOwner, fileName);
-
+            await SaveExcelFile(loopExchangeData, nftInformationAndOwner, fileNameLocation);
         }
 
         private static async Task SaveExcelFile(LoopExchange loopExchangeData, List<LoopPhunksHolderInformation> nftInformationAndOwner, FileInfo file)
