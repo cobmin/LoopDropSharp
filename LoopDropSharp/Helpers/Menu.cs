@@ -30,7 +30,7 @@ namespace LoopDropSharp.Helpers
             Font.SetTextToBlue("             __         __            ");
             Font.SetTextToBlue("|   _  _  _ |  \\ _ _  _(__ |_  _  _ _ ");
             Font.SetTextToBlue("|__(_)(_)[_)|__/[ (_)[_)__)[ )(_][ [_)");
-            Font.SetTextToBlue("         |           |Version 1.2.0|  ");
+            Font.SetTextToBlue("         |           |Version 1.3.0|  ");
             //Font.SetTextToDarkBlue("Query and send your Nfts");
             Font.SetTextToBlue("[Airdrop·Nfts·Crypto]");
             Console.WriteLine();
@@ -48,14 +48,17 @@ namespace LoopDropSharp.Helpers
                 {"utilityOne", "Find Nft Data for a single Nft"},
                 {"utilityTwo", "Find Nft Datas from Nft Ids"},
                 {"utilityThree", "Find all Nft Data from a Collection"},
-                {"utilityFour", "Find Nft Holders from Nft Data"},
-                {"utilityFive", "Find Nft Holders from an Ens/Wallet"},
-                {"utilitySix", "Find Nft Holders who own all given Nft Data"},
-                {"utilitySeven", "Airdrop the same NFT to any users"},
-                {"utilityEight", "Airdrop the same NFT to any users with different amounts"},
-                {"utilityNine", "Airdrop unique NFTs to any users"},
-                {"utilityTen", "Airdrop LRC/ETH to any users"},
-                {"utilityEleven", "Airdrop LRC/ETH to any users with different amounts"}
+                {"utilityFour", "Find all Nft Data from a Wallet"},
+                {"utilityFive", "Find Nft Holders from Nft Data"},
+                {"utilitySix", "Find Nft Holders from an Ens/Wallet"},
+                {"utilitySeven", "Find Nft Holders who own all given Nft Data"},
+                {"utilityEight", "Airdrop the same NFT to any users"},
+                {"utilityNine", "Airdrop the same NFT to any users with different amounts"},
+                {"utilityTen", "Airdrop unique NFTs to any users"},
+                {"utilityEleven", "Airdrop LRC/ETH to any users"},
+                {"utilityTwelve", "Airdrop LRC/ETH to any users with different amounts"},
+                {"utilityThirteen", "LoopPhunks owners and amounts"},
+                {"utilityFourteen", "Send all Nfts owned by banished wallet to the dead address"}
             };
             // Menu of the Utilities. need to be sure to change numbers here and in the CheckUtilityNumber
             Font.SetTextToBlue("This application can currently perform the following:");
@@ -64,18 +67,22 @@ namespace LoopDropSharp.Helpers
             Font.SetTextToWhite($"\t 1. {allUtilities.ElementAt(1).Value}.");
             Font.SetTextToWhite($"\t 2. {allUtilities.ElementAt(2).Value}.");
             Font.SetTextToWhite($"\t 3. {allUtilities.ElementAt(3).Value}.");
-            Font.SetTextToDarkPurple("        Nft Holders");
             Font.SetTextToWhite($"\t 4. {allUtilities.ElementAt(4).Value}.");
+            Font.SetTextToDarkPurple("        Nft Holders");
             Font.SetTextToWhite($"\t 5. {allUtilities.ElementAt(5).Value}.");
             Font.SetTextToWhite($"\t 6. {allUtilities.ElementAt(6).Value}.");
+            Font.SetTextToWhite($"\t 7. {allUtilities.ElementAt(7).Value}.");
             Font.SetTextToPurple("     Airdrops:");
             Font.SetTextToDarkPurple("        Nfts");
-            Font.SetTextToWhite($"\t 7. {allUtilities.ElementAt(7).Value}.");
             Font.SetTextToWhite($"\t 8. {allUtilities.ElementAt(8).Value}.");
             Font.SetTextToWhite($"\t 9. {allUtilities.ElementAt(9).Value}.");
-            Font.SetTextToDarkPurple("        Crypto");
             Font.SetTextToWhite($"\t 10. {allUtilities.ElementAt(10).Value}.");
+            Font.SetTextToWhite($"\t 14. {allUtilities.ElementAt(14).Value}.");
+            Font.SetTextToDarkPurple("        Crypto");
             Font.SetTextToWhite($"\t 11. {allUtilities.ElementAt(11).Value}.");
+            Font.SetTextToWhite($"\t 12. {allUtilities.ElementAt(12).Value}.");
+            Font.SetTextToPurple("     LoopPhunks Stats:");
+            Font.SetTextToWhite($"\t 13. {allUtilities.ElementAt(13).Value}.");
             Font.SetTextToPurple("     Tips/FAQs:");
             Font.SetTextToWhite($"\t 0. {allUtilities.ElementAt(0).Value}.");
             Font.SetTextToGreen("Which would you like to do?");
@@ -99,7 +106,7 @@ namespace LoopDropSharp.Helpers
         }
 
         public static string EndOfLoopDropSharpFunctionality(List<string> validAddress, List<string> invalidAddress, 
-            List<string> banishAddress, List<MintsAndTotal> userMintsAndTotalList, List<NftHoldersAndTotal> nftHoldersAndTotalList
+            List<string> banishAddress, List<MintsAndTotal> userMintsAndTotalList, List<NftHolder> nftHoldersAndTotalList
             )
         {
             validAddress.Clear();

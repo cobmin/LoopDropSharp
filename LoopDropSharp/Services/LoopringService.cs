@@ -1,4 +1,6 @@
 ﻿using LoopDropSharp;
+using LoopDropSharp.Helpers;
+using LoopDropSharp.Models;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -181,18 +183,18 @@ namespace LoopDropSharp
         }
         public async Task<string> CheckForEthAddress(string apiKey, string address)
         {
-            string minterForNftData = address.Trim().ToLower();
+            address = address.Trim().ToLower();
             if (address.Contains(".eth"))
             {
-                var varHexAddress = await GetHexAddress(apiKey, minterForNftData);
+                var varHexAddress = await GetHexAddress(apiKey, address);
                 if (!String.IsNullOrEmpty(varHexAddress.data))
                 {
-                    minterForNftData = varHexAddress.data;
-                    return minterForNftData;
+                    address = varHexAddress.data;
+                    return address;
                 }
                 else
                 {
-                    Font.SetTextToYellow($"{minterForNftData} is an invalid address");
+                    Font.SetTextToYellow($"{address} is an invalid address");
                     return null;
                 }
             }
@@ -252,6 +254,39 @@ namespace LoopDropSharp
             }
         }
 
+        public async Task<List<Datum>> GetWalletsNfts(string apiKey, int accountId)
+        {
+            var allData = new List<Datum>();
+            var request = new RestRequest("/api/v3/user/nft/balances");
+            request.AddHeader("X-API-KEY", apiKey);
+            request.AddParameter("accountId", accountId);
+            request.AddParameter("limit", 50);
+            try
+            {
+                var offset = 50;
+                var response = await _client.GetAsync(request);
+                var data = JsonConvert.DeserializeObject<NftBalance>(response.Content!);
+                var total = data.totalNum;
+
+                allData.AddRange(data.data);
+                while (total > 50)
+                {
+                    total = total - 50;
+                    request.AddOrUpdateParameter("offset", offset);
+                    response = await _client.GetAsync(request);
+                    var moreData = JsonConvert.DeserializeObject<NftBalance>(response.Content!);
+                    allData.AddRange(moreData.data);
+                    offset = offset + 50;
+                }
+                return allData;
+            }
+            catch (HttpRequestException httpException)
+            {
+                Font.SetTextToWhite($"Error getting TokenId: {httpException.Message}");
+                return null;
+            }
+        }
+
         public async Task<NftData> GetNftData(string apiKey, string nftId, string minter, string tokenAddress)
         {
             var data = new NftData();
@@ -303,6 +338,7 @@ namespace LoopDropSharp
                     allData.AddRange(moreData.nftHolders);
                     offset = offset + 100;
                 }
+                Thread.Sleep(100);
                 return allData;
             }
             catch (HttpRequestException httpException)
@@ -311,6 +347,43 @@ namespace LoopDropSharp
                 return null;
             }
         }
+        public async Task<List<LoopPhunksHolderInformation>> GetNftHoldersLoopPhunks(string apiKey, List<LoopPhunksInformation> loopPhunksInformation)
+        {
+            var allData = new List<LoopPhunksHolderInformation>();
+            foreach (var loopPhunkInformation in loopPhunksInformation)
+            {
+                var request = new RestRequest("/api/v3/nft/info/nftHolders");
+                request.AddHeader("X-API-KEY", apiKey);
+                request.AddOrUpdateParameter("nftData", loopPhunkInformation.nftData);
+                try
+                {
+                    var response = await _client.GetAsync(request);
+                    var data = JsonConvert.DeserializeObject<NftHoldersAndTotal>(response.Content!);
+                    ILoopringService loopringService = new LoopringService();
+                    var userAccountInformation = await loopringService.GetUserAccountInformation(data.nftHolders.FirstOrDefault().accountId.ToString());
+
+                    var loopPhunksHolderAndAmount = new LoopPhunksHolderAndAmount() {
+                        owner = userAccountInformation.owner,
+                        amount = int.Parse(data.nftHolders.FirstOrDefault().amount)};
+
+                    
+                    allData.Add(new LoopPhunksHolderInformation() 
+                    {
+                        loopPhunksHolderAndAmount = loopPhunksHolderAndAmount, 
+                        loopPhunksInformation = loopPhunkInformation, 
+                    });
+                    Thread.Sleep(100);
+
+                }
+                catch (HttpRequestException httpException)
+                {
+                    Font.SetTextToWhite($"Error getting TokenId: {httpException.Message}");
+                    return null;
+                }
+            }
+            return allData;
+        }
+
         public async Task<List<NftHoldersAndTotal>> GetNftHoldersMultipleOld(string apiKey, string nftData)
         {
             var allData = new List<NftHoldersAndTotal>();
@@ -398,6 +471,24 @@ namespace LoopDropSharp
                     Font.SetTextToRed("The above information did not find an account. Please, try again.");
                     return null;
                 }
+                Font.SetTextToWhite($"Error getting TokenId: {httpException.Message}");
+                return null;
+            }
+        }
+
+        public async Task<string> GetApiKey(int accountId, string xApiSig)
+        {
+            var request = new RestRequest("api/v3/apiKey");
+            request.AddHeader("X-API-SIG", xApiSig);
+            request.AddParameter("accountId", accountId);
+            try
+            {
+                var response = await _client.GetAsync(request);
+                var data = JsonConvert.DeserializeObject<ApiKey>(response.Content!);
+                return data.apiKey;
+            }
+            catch (HttpRequestException httpException)
+            {
                 Font.SetTextToWhite($"Error getting TokenId: {httpException.Message}");
                 return null;
             }
@@ -557,6 +648,45 @@ namespace LoopDropSharp
                 }
             }
             if (banishAddresses.Contains(toAddress) || banishAddresses.Contains(toAddressInitial.Trim().ToLower()))
+            {
+                banned = true;
+            }
+            else
+            {
+                banned = false;
+            }
+            return banned;
+        }
+
+        public async Task<bool> CheckBanishFile(string loopringApiKey, string toAddress)
+        {
+            List<string> banishAddresses = new List<string>();
+            bool banned;
+
+            using (StreamReader sr = new StreamReader("./Banish.txt"))
+            {
+                string banishAddress;
+                while ((banishAddress = sr.ReadLine()) != null)
+                {
+                    if (banishAddress.Contains(".eth"))
+                    {
+                        Thread.Sleep(200);
+                        var varHexAddress = await GetHexAddress(loopringApiKey, banishAddress);
+                        if (!String.IsNullOrEmpty(varHexAddress.data))
+                        {
+                            banishAddress = varHexAddress.data.ToLower().Trim();
+                        }
+                        else
+                        {
+                            //invalidAddress.Add(toAddressInitial);
+                            Console.WriteLine($"Invalid address: {banishAddress}. Could not find an associated wallet.");
+                            //continue;
+                        }
+                    }
+                    banishAddresses.Add(banishAddress.ToLower().Trim());
+                }
+            }
+            if (banishAddresses.Contains(toAddress))
             {
                 banned = true;
             }
