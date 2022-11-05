@@ -75,7 +75,7 @@ LoopDropSharp Nft collection: https://loopexchange.art/collection/loopdropsharp
 More information: https://cobmin.io/posts/LoopDropSharp
 
 ### Supporting Me
-If you would like to support me you can purchase one of my Nfts here, https://loopexchange.art/collection/flowers or donate to my Loopring wallet, jacobhuber.eth.
+If you would like to support me you can purchase one of my Nfts here, https://loopexchange.art/collection/loopdropsharp or donate to my Loopring wallet, jacobhuber.eth.
 
 <img src="https://user-images.githubusercontent.com/97369738/189735788-5ca5ff22-3e28-4c2d-9185-b1121d78a6e2.jpeg" width="150" />
 
