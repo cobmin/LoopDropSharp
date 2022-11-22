@@ -33,4 +33,13 @@ namespace LoopDropSharp
         public int totalNum { get; set; }
         public List<Datum> data { get; set; }
     }
+
+    public class CoinBalance
+    {
+        public int accountId { get; set; }
+        public int tokenId { get; set; }
+        public string total { get; set; }
+        public string locked { get; set; }
+        public Pending pending { get; set; }
+    }
 }

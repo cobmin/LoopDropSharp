@@ -1,14 +1,20 @@
-﻿using LoopDropSharp;
+﻿using CsvHelper;
+using LoopDropSharp;
 using LoopDropSharp.Helpers;
 using LoopDropSharp.Models;
 using LoopringSharp;
 using Microsoft.Extensions.Configuration;
+using Nethereum.ABI.Util;
 using Nethereum.Signer;
 using Nethereum.Signer.EIP712;
 using Nethereum.Util;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto.Tls;
 using PoseidonSharp;
+using System.Collections.Generic;
+using System.Formats.Asn1;
+using System.Globalization;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using Type = LoopDropSharp.Type;
@@ -16,6 +22,7 @@ using Type = LoopDropSharp.Type;
 // load services
 ILoopringService loopringService = new LoopringService();
 ILoopExchangeService loopExchangeService = new LoopExchangeService();
+IImxService imxService = new ImxService();
 IEthereumService ethereumService = new EthereumService();
 INftMetadataService nftMetadataService = new NftMetadataService("https://loopring.mypinata.cloud/ipfs/");
 
@@ -371,13 +378,15 @@ while (userResponseReadyToMoveOn == "yes")
         #endregion case 6
         #region case 7
         case "7":
+            var originalalletHolderList = new List<NftHolder>();
+            var filteredWallettHolderList = new List<NftHolder>();
+            var howManyNfts = Utils.CheckInputDotTxt(fileName);
+            var allNftData = new List<string>();
+
             Font.SetTextToBlue(menuAndUtility.allUtilities.ElementAt(7).Value);
             Font.SetTextToBlue("Here you will provide the Nft Data and get the Nft Holders who own all Nfts provided.");
             Font.SetTextToWhite("Let's get started.");
-            var howManyNfts = Utils.CheckInputDotTxt(fileName);
-            Font.SetTextToPurple($"You provided the following {howManyNfts} Nfts.");
 
-            var allNftData = new List<string>();
             using (StreamReader sr = new StreamReader("./Input.txt"))
             {
                 while ((nftData = sr.ReadLine()) != null)
@@ -385,66 +394,27 @@ while (userResponseReadyToMoveOn == "yes")
                     allNftData.Add(nftData);
                 }
             }
-            var originalWalletHolderList = new List<string>();
-            var placeHolderWalletHolderList = new List<string>();
-            var filteredWallettHolderList = new List<string>(placeHolderWalletHolderList);
+
+            //Font.SetTextToPurple($"You provided the following {howManyNfts} Nfts.");
+
             foreach (var data in allNftData)
             {
-                if (allNftData.FirstOrDefault() == data)
+                originalalletHolderList.AddRange(await loopringService.GetNftHoldersMultiple(settings.LoopringApiKey, data));
+            }
+            
+            foreach (var item in originalalletHolderList.DistinctBy(x=>x.accountId))
+            {
+                if (originalalletHolderList.Where(x=>x.accountId == item.accountId).Count() == howManyNfts)
                 {
-                    nftHoldersAndTotalList = await loopringService.GetNftHoldersMultiple(settings.LoopringApiKey, data);  //the nft tokenId, not the 
-                    foreach (var nftHoldersAndTotalSingle in nftHoldersAndTotalList)
-                    {
-                        if (nftHoldersAndTotalSingle == nftHoldersAndTotalList.FirstOrDefault())
-                        {
-                            var minterFromNftDatas = await loopringService.GetNftInformationFromNftData(settings.LoopringApiKey, data);
-                            var accountIdFromMinter = await loopringService.GetUserAccountInformationFromOwner(minterFromNftDatas[0].minter);
-                            userNftToken = await loopringService.GetTokenId(settings.LoopringApiKey, accountIdFromMinter.accountId, data);
-                            var nftmetaDataLink = await ethereumService.GetMetadataLink(userNftToken.data[0].nftId, userNftToken.data[0].tokenAddress, 0);
-                            nftMetadata = await nftMetadataService.GetMetadata(nftmetaDataLink);
-
-                            Font.SetTextToBlue($"{nftMetadata.name}");
-                        };
-                            var userAccountInformation = await loopringService.GetUserAccountInformation(nftHoldersAndTotalSingle.accountId.ToString());
-                            originalWalletHolderList.Add(userAccountInformation.owner);
-                    }
-                }
-                else
-                {
-                    nftHoldersAndTotalList = await loopringService.GetNftHoldersMultiple(settings.LoopringApiKey, data);
-                    foreach (var nftHoldersAndTotalSingle in nftHoldersAndTotalList)
-                    {
-                        if (nftHoldersAndTotalSingle == nftHoldersAndTotalList.FirstOrDefault())
-                        {
-                            var minterFromNftDatas = await loopringService.GetNftInformationFromNftData(settings.LoopringApiKey, data);
-                            var accountIdFromMinter = await loopringService.GetUserAccountInformationFromOwner(minterFromNftDatas[0].minter);
-                            userNftToken = await loopringService.GetTokenId(settings.LoopringApiKey, accountIdFromMinter.accountId, data);
-                            var nftmetaDataLink = await ethereumService.GetMetadataLink(userNftToken.data[0].nftId, userNftToken.data[0].tokenAddress, 0);
-                            nftMetadata = await nftMetadataService.GetMetadata(nftmetaDataLink);
-
-                            Font.SetTextToBlue($"{nftMetadata.name}");
-                        };
-                        var userAccountInformation = await loopringService.GetUserAccountInformation(nftHoldersAndTotalSingle.accountId.ToString());
-
-                        if (originalWalletHolderList.Contains(userAccountInformation.owner) && filteredWallettHolderList.Count() == 0)
-                        {
-                            placeHolderWalletHolderList.Add(userAccountInformation.owner);
-                        }
-                        else if (filteredWallettHolderList.Contains(userAccountInformation.owner))
-                        {
-                            placeHolderWalletHolderList.Add(userAccountInformation.owner);
-                        }
-                        var filteredWalletHolder = placeHolderWalletHolderList.ConvertAll<string>(x => x.ToString());
-                        filteredWallettHolderList = filteredWalletHolder;
-                        placeHolderWalletHolderList.Clear();
-                        //right now all looks like it will work once the placeholderwalletholderlist stops being a reference type. need to make them all a value type. 
-                    }
+                    filteredWallettHolderList.Add(item);
                 }
             }
+
             Font.SetTextToPurple($"The following {filteredWallettHolderList.Count()} wallets have all above Nfts. ");
             foreach (var wallet in filteredWallettHolderList)
             {
-                Console.WriteLine($"{wallet}");
+                var walletAddress = await loopringService.GetUserAccountInformation(wallet.accountId.ToString());
+                Console.WriteLine($"{walletAddress.owner}");
             }
 
             break;
@@ -1798,7 +1768,6 @@ while (userResponseReadyToMoveOn == "yes")
             Font.SetTextToBlue(menuAndUtility.allUtilities.ElementAt(14).Value);
             Font.SetTextToBlue("Here you will get all the wallet addresses and Analytics from the LoopPhunks collection.");
             Font.SetTextToYellow("Note that you must own a LoopPhunks to use this.");
-            Font.SetTextToWhite("Collecting data, this may take a few minutes...");
 
             var signedMessage = EDDSAHelper.EddsaSignUrl(
             loopringPrivateKey,
@@ -1811,12 +1780,14 @@ while (userResponseReadyToMoveOn == "yes")
 
             if (apiKey == loopringApiKey)
             {
+                Font.SetTextToWhite("Collecting data, this may take a few minutes...");
+
                 var loopPhunksInformation = LoopPhunks.GetLoopPhunksInformation();
                 var LoopExchangeData = await loopExchangeService.GetLoopPhunksData();
                 var nftInformationAndOwner = await loopringService.GetNftHoldersLoopPhunks(loopringApiKey, loopPhunksInformation);
 
                 ExcelFile.CreateExcelFile(LoopExchangeData, nftInformationAndOwner);
-                Console.WriteLine($"Finished. Your file can be found {AppDomain.CurrentDomain.BaseDirectory} + LoopPhunksDataCOOL.xlsx");
+                Console.WriteLine($@"Finished. Your file can be found {AppDomain.CurrentDomain.BaseDirectory}\LoopPhunksDataCOOL.xlsx");
 
             }
             else
@@ -1825,6 +1796,54 @@ while (userResponseReadyToMoveOn == "yes")
             }
             break;
         #endregion case 14
+        #region case 15
+        case "15":
+            Font.SetTextToBlue(menuAndUtility.allUtilities.ElementAt(15).Value);
+            Font.SetTextToBlue("Here you will get all the current holders of an IMX collection.");
+            Font.SetTextToYellow("Note that you must own a LoopPhunks to use this.");
+
+            signedMessage = EDDSAHelper.EddsaSignUrl(
+            loopringPrivateKey,
+            HttpMethod.Get,
+            new List<(string Key, string Value)>() { ("accountId", fromAccountId.ToString()) },
+            null,
+            Constants.ApiKeyUrl,
+            "https://api3.loopring.io/");
+            apiKey = await loopringService.GetApiKey(fromAccountId, signedMessage);
+
+            if (apiKey == loopringApiKey)
+            {
+
+                Font.SetTextToBlue("What is the Collection Address?");
+                string collectionResponse = Utils.ReadLineWarningNoNulls("What is the Collection Address?");
+
+                Font.SetTextToWhite("Collecting data, this may take a few minutes...");
+
+                var minterInformation = new List<AssetExcel>();
+
+                var collectionMints = await imxService.GetCollectionAssets(collectionResponse);
+
+                foreach (var minter in collectionMints)
+                {
+                    minterInformation.Add(new AssetExcel
+                    {
+                        name = minter.name,
+                        user = minter.user
+                    });
+                }
+                using (var writer = new StreamWriter("./CollectionHolders.csv"))
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    csv.WriteRecords(minterInformation.OrderBy(x => x.name));
+                }
+                Console.WriteLine($@"Finished. Your file can be found {AppDomain.CurrentDomain.BaseDirectory}\CollectionHolders.xlsx");
+            }
+            else
+            {
+                Font.SetTextToRed("It looks like the appsetting file is not setup correctly because the accountId does not match the Loopring Api Key.");
+            }
+    break;
+        #endregion case 15
     }
     userResponseReadyToMoveOn = Menu.EndOfLoopDropSharpFunctionality(validAddress, invalidAddress, banishAddress, userMintsAndTotalList,
         nftHoldersAndTotalList);

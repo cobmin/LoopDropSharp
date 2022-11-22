@@ -190,6 +190,100 @@ namespace LoopDropSharp.Helpers
             ws.Cells["A5:G5"].Merge = true;
         }
 
+        public static async Task CreateExcelFileImxCollection(List<Result> collectionHolders)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var fileNameLocation = new FileInfo(@".\ImxCollectionHolders.xlsx");
+
+            await SaveExcelFileImxCollection(collectionHolders, fileNameLocation);
+        }
+
+        private static async Task SaveExcelFileImxCollection(List<Result> collectionHolders, FileInfo file)
+        {
+            DeleteIfExists(file);
+
+            using (var package = new ExcelPackage(file))
+            {
+                var ws = package.Workbook.Worksheets.Add("Items");
+
+                var range = ws.Cells["A1"].LoadFromCollection(collectionHolders, true, TableStyles.Medium1);
+                //range = ws.Cells["C6"].LoadFromCollection(collectionHolders.Select(x => x.loopPhunksInformation), true, TableStyles.Medium1);
+
+                ws.Cells.AutoFitColumns();
+
+                await package.SaveAsync();
+            }
+        }
+
+        public static async Task CreateExcelFileImxMints(List<MintResult> collectionHolders)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var fileNameLocation = new FileInfo(@".\ImxCollectionMints.xlsx");
+
+            await SaveExcelFileImxMints(collectionHolders, fileNameLocation);
+        }
+
+        private static async Task SaveExcelFileImxMints(List<MintResult> collectionHolders, FileInfo file)
+        {
+            DeleteIfExists(file);
+
+            using (var package = new ExcelPackage(file))
+            {
+                var ws = package.Workbook.Worksheets.Add("Items");
+                var range = ws.Cells["A1"].LoadFromCollection(collectionHolders, true, TableStyles.Medium1);
+                range = ws.Cells["F1"].LoadFromCollection(collectionHolders.Select(x => x.token.data.token_id), true, TableStyles.Medium1);
+
+                ws.Cells.AutoFitColumns();
+                await package.SaveAsync();
+            }
+        }
+
+        public static async Task CreateExcelFileImxCollectionTransfers(List<TransferResult> collectionHolders)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var fileNameLocation = new FileInfo(@".\ImxCollectionTransfers.xlsx");
+
+            await SaveExcelFileImxTransfers(collectionHolders, fileNameLocation);
+        }
+
+        private static async Task SaveExcelFileImxTransfers(List<TransferResult> collectionHolders, FileInfo file)
+        {
+            DeleteIfExists(file);
+
+            using (var package = new ExcelPackage(file))
+            {
+                var ws = package.Workbook.Worksheets.Add("Items");
+                var range = ws.Cells["A1"].LoadFromCollection(collectionHolders, true, TableStyles.Medium1);
+
+                ws.Cells.AutoFitColumns();
+                await package.SaveAsync();
+            }
+        }
+
+        public static async Task CreateExcelFileImxWalletBalance(List<ImxUserEth> walletAddresses)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var fileNameLocation = new FileInfo(@".\ImxWalletBalances.xlsx");
+
+            await SaveExcelFileImxWalletBalance(walletAddresses, fileNameLocation);
+
+            Console.WriteLine($"Finished. Your file can be found {AppDomain.CurrentDomain.BaseDirectory}\nImxHolders.xlsx");
+        }
+
+        private static async Task SaveExcelFileImxWalletBalance(List<ImxUserEth> walletAddresses, FileInfo file)
+        {
+            DeleteIfExists(file);
+
+            using (var package = new ExcelPackage(file))
+            {
+                var ws = package.Workbook.Worksheets.Add("Items");
+                var range = ws.Cells["A1"].LoadFromCollection(walletAddresses, true, TableStyles.Medium1);
+
+                ws.Cells.AutoFitColumns();
+                await package.SaveAsync();
+            }
+        }
+
         private static void DeleteIfExists(FileInfo file)
         {
             if (file.Exists)

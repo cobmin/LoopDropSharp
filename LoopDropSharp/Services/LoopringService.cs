@@ -23,6 +23,24 @@ namespace LoopDropSharp
             _client = new RestClient(_baseUrl);
         }
 
+        public async Task<CoinBalance> GetUserEthBalance(string apiKey, int accountId)
+        {
+            var request = new RestRequest("api/v3/user/balances");
+            request.AddHeader("x-api-key", apiKey);
+            request.AddParameter("accountId", accountId);
+            request.AddParameter("tokens", 1);
+            try
+            {
+                var response = await _client.GetAsync(request);
+                var data = JsonConvert.DeserializeObject<CoinBalance>(response.Content!);
+                return data;
+            }
+            catch (HttpRequestException httpException)
+            {
+                Font.SetTextToWhite($"Error getting storage id: {httpException.Message}");
+                return null;
+            }
+        }
 
         public async Task<StorageId> GetNextStorageId(string apiKey, int accountId, int sellTokenId)
         {

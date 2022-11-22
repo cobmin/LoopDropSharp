@@ -11,6 +11,7 @@ namespace LoopDropSharp
 {
     public interface ILoopringService
     {
+        Task<CoinBalance> GetUserEthBalance(string apiKey, int accountId);
         Task<StorageId> GetNextStorageId(string apiKey, int accountId, int sellTokenId);
         Task<OffchainFee> GetOffChainFee(string apiKey, int accountId, int requestType, string amount);
 
