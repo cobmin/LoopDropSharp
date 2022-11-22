@@ -3,7 +3,7 @@
 
 ## Current Functionality:
 
-![image](https://user-images.githubusercontent.com/97369738/193433450-b1ba65b7-35e8-4e1d-9206-05cd6d9b6606.png)
+![image](https://user-images.githubusercontent.com/97369738/200132091-5887b31d-0255-47d1-86b9-8bb69a2e6c5e.png)
 
 ## Setup
 
@@ -59,20 +59,23 @@ In the Input.txt located in the project directory add a wallet address a comma a
 ### 9. Airdrop unique NFTs to any users
 In the Input.txt located in the project directory add a wallet address a comma and then the nft data (example: 0x4a71e0267207cec67c78df8857d81c508d43b00d,0x103cb20d3b310873f711d25758d57f18ba77a6b7842ae605d662e0ddd908ed5a). You will have one wallet address and nft data per line. Each wallet address will be one transfer. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
 
-### 10. Airdrop LRC/ETH to any users.
+### 12. Airdrop LRC/ETH to any users.
 In the Input.txt located in the project directory add a wallet addresses. You will have one wallet address per line. Each wallet address will be one transfer of LRC/ETH. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
 
-### 11. Airdrop LRC/ETH to any users with different amounts
+### 13. Airdrop LRC/ETH to any users with different amounts
 In the Input.txt located in the project directory add a wallet address a comma and then the amount of LRC/ETH to send (example: 0x4a71e0267207cec67c78df8857d81c508d43b00d,50.25). You will have one wallet address and one amount per line. Each wallet address will be one transfer. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
 
 ## Banish.txt setup
 In the Banish.txt located in the project directory add wallet addresses that you do not want to send to. If you have a wallet address that you never want to airdrop an Nft to or send crypto to then you can place them on this list. The application checks this list before sending Nfts or crypto. You can add a long wallet address or the ENS.
 
+### 11. Send all Nfts owned by banished addresses to the dead address
+In the Banish.txt located in the project directory add a wallet address whose Nfts you want to remove from your wallet. You can add a long wallet address or the ENS.
+
 LoopDropSharp Nft collection: https://loopexchange.art/collection/loopdropsharp
 More information: https://cobmin.io/posts/LoopDropSharp
 
 ### Supporting Me
-If you would like to support me you can purchase one of my Nfts here, https://loopexchange.art/collection/flowers or donate to my Loopring wallet, jacobhuber.eth.
+If you would like to support me you can purchase one of my Nfts here, https://loopexchange.art/collection/loopdropsharp or donate to my Loopring wallet, jacobhuber.eth.
 
 <img src="https://user-images.githubusercontent.com/97369738/189735788-5ca5ff22-3e28-4c2d-9185-b1121d78a6e2.jpeg" width="150" />
 
