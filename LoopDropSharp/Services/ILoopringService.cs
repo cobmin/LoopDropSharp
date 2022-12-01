@@ -16,6 +16,7 @@ namespace LoopDropSharp
         Task<OffchainFee> GetOffChainFee(string apiKey, int accountId, int requestType, string amount);
 
         Task<TransferFeeOffchainFee> GetOffChainTransferFee(string apiKey, int accountId, int requestType, string feeToken, string amount);
+        Task<TransferFeeOffchainFee> GetOffChainTransferFeeForTransferAndUpdateAccount(string apiKey, int accountId, int requestType);
         Task<string> SubmitNftTransfer(
             string apiKey,
             string exchange,
@@ -51,6 +52,24 @@ namespace LoopDropSharp
                    string ecdsaSignature,
                    string memo
                  );
+        Task<string> SubmitPayPayeeUpdateAccountFee(
+  string apiKey,
+      string exchange,
+      int fromAccountId,
+      string fromAddress,
+           int toAccountId,
+           string toAddress,
+           int tokenId,
+           string tokenAmount,
+           int maxFeeTokenId,
+           string maxFeeAmount,
+           int storageId,
+           long validUntil,
+           string eddsaSignature,
+           string ecdsaSignature,
+           string memo,
+           string payPayeeUpdateAccount
+         );
         Task<EnsResult> GetHexAddress(string apiKey, string ens);
         Task<string> CheckForEthAddress(string apiKey, string address);
         Task<NftBalance> GetTokenId(string apiKey, int accountId, string nftData);
@@ -63,10 +82,12 @@ namespace LoopDropSharp
         Task<NftHoldersAndTotal> GetNftHolders(string apiKey, string nftData);
         Task<AccountInformation> GetUserAccountInformation(string accountId);
         Task<AccountInformation> GetUserAccountInformationFromOwner(string owner);
+        Task<AccountInformation> CheckUserAccountInformationFromOwner(string owner);
         Task<string> GetApiKey(int accountId, string xApiSig);
         Task<List<MintsAndTotal>> GetUserMintedNfts(string apiKey, int accountId);
         Task<List<NftData>> GetUserMintedNftsWithCollection(string apiKey, int accountId, string collectionId);
         Task<List<NftData>> GetNftInformationFromNftData(string apiKey, string nftData);
+        Task<List<Transfer>> GetUserNftTransfer(int accountId, string nftData);
         Task<bool> CheckBanishTextFile(string toAddressInitial, string toAddress, string loopringApiKey);
         Task<bool> CheckBanishFile(string loopringApiKey, string toAddress);
     }

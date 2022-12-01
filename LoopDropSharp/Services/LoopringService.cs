@@ -15,6 +15,7 @@ namespace LoopDropSharp
     public class LoopringService : ILoopringService, IDisposable
     {
         const string _baseUrl = "https://api3.loopring.io";
+        //const string _baseUrl = "https://uat2.loopring.io";
 
         readonly RestClient _client;
 
@@ -169,6 +170,56 @@ namespace LoopDropSharp
             request.AddParameter("eddsaSignature", eddsaSignature);
             request.AddParameter("ecdsaSignature", ecdsaSignature);
             request.AddParameter("memo", memo);
+            try
+            {
+                var response = await _client.ExecutePostAsync(request);
+                var data = response.Content;
+                return data;
+            }
+            catch (HttpRequestException httpException)
+            {
+                Font.SetTextToWhite($"Error submitting token transfer: {httpException.Message}");
+                return null;
+            }
+        }
+        public async Task<string> SubmitPayPayeeUpdateAccountFee(
+          string apiKey,
+          string exchange,
+          int fromAccountId,
+          string fromAddress,
+               int toAccountId,
+               string toAddress,
+               int tokenId,
+               string tokenAmount,
+               int maxFeeTokenId,
+               string maxFeeAmount,
+               int storageId,
+               long validUntil,
+               string eddsaSignature,
+               string ecdsaSignature,
+               string memo,
+               string payPayeeUpdateAccount
+          )
+        {
+            var request = new RestRequest("api/v3/transfer");
+            request.AddHeader("x-api-key", apiKey);
+            request.AddHeader("x-api-sig", ecdsaSignature);
+            request.AlwaysMultipartFormData = true;
+            request.AddParameter("exchange", exchange);
+            request.AddParameter("payerId", fromAccountId);
+            request.AddParameter("payerAddr", fromAddress);
+            request.AddParameter("payeeId", toAccountId);
+            request.AddParameter("payeeAddr", toAddress);
+            request.AddParameter("token.tokenId", tokenId);
+            request.AddParameter("token.volume", tokenAmount);
+            request.AddParameter("maxFee.tokenId", maxFeeTokenId);
+            request.AddParameter("maxFee.volume", maxFeeAmount);
+            request.AddParameter("storageId", storageId);
+            request.AddParameter("validUntil", validUntil);
+            request.AddParameter("eddsaSignature", eddsaSignature);
+            request.AddParameter("ecdsaSignature", ecdsaSignature);
+            request.AddParameter("memo", memo);
+            request.AddParameter("payPayeeUpdateAccount", payPayeeUpdateAccount);
             try
             {
                 var response = await _client.ExecutePostAsync(request);
@@ -494,6 +545,23 @@ namespace LoopDropSharp
             }
         }
 
+        public async Task<AccountInformation> CheckUserAccountInformationFromOwner(string owner)
+        {
+            var request = new RestRequest("/api/v3/account");
+            request.AddParameter("owner", owner);
+            try
+            {
+                var response = await _client.GetAsync(request);
+                var data = JsonConvert.DeserializeObject<AccountInformation>(response.Content!);
+                Thread.Sleep(100);
+                return data;
+            }
+            catch (HttpRequestException httpException)
+            {
+                return null;
+            }
+        }
+
         public async Task<string> GetApiKey(int accountId, string xApiSig)
         {
             var request = new RestRequest("api/v3/apiKey");
@@ -618,6 +686,24 @@ namespace LoopDropSharp
                 return null;
             }
         }
+        public async Task<TransferFeeOffchainFee> GetOffChainTransferFeeForTransferAndUpdateAccount(string apiKey, int accountId, int requestType)
+        {
+            var request = new RestRequest("api/v3/user/offchainFee");
+            request.AddHeader("x-api-key", apiKey);
+            request.AddParameter("accountId", accountId);
+            request.AddParameter("requestType", requestType);
+            try
+            {
+                var response = await _client.GetAsync(request);
+                var data = JsonConvert.DeserializeObject<TransferFeeOffchainFee>(response.Content!);
+                return data;
+            }
+            catch (HttpRequestException httpException)
+            {
+                Font.SetTextToWhite($"Error getting transfer off chain fee: {httpException.Message}");
+                return null;
+            }
+        }
 
         public async Task<List<NftData>> GetNftInformationFromNftData(string apiKey, string nftData)
         {
@@ -713,6 +799,38 @@ namespace LoopDropSharp
                 banned = false;
             }
             return banned;
+        }
+
+        public async Task<List<Transfer>> GetUserNftTransfer(int accountId, string nftData)
+        {
+            var transfers = new List<Transfer>();
+            var request = new RestRequest("/api/v3/user/nft/transfers");
+            request.AddParameter("accountId", accountId);
+            request.AddHeader("x-api-key", "n5SNIiujrgTXzQBknDzitBK4Rb8Xoi4TmuENUKWZcjDJZQMvBBZhLMuWnwZjghWV");
+            request.AddParameter("nftData", nftData);
+            request.AddParameter("limit", 50);
+            try
+            {
+                var response = await _client.GetAsync(request);
+                var data = JsonConvert.DeserializeObject<Root>(response.Content!);
+                var total = data.totalNum;
+                transfers.AddRange(data.transfers);
+                while (total > 50)
+                {
+                    total = total - 50;
+                    var createdAt = transfers.LastOrDefault().createdAt.ToString();
+                    request.AddOrUpdateParameter("end", createdAt);
+                    response = await _client.GetAsync(request);
+                    var moreData = JsonConvert.DeserializeObject<Root>(response.Content!);
+                    transfers.AddRange(moreData.transfers);
+                }
+                return transfers;
+            }
+            catch (HttpRequestException httpException)
+            {
+                Font.SetTextToWhite($"Error getting TokenId: {httpException.Message}");
+                return null;
+            }
         }
 
         public void Dispose()

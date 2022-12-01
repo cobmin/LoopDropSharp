@@ -15,6 +15,7 @@ namespace LoopDropSharp
 {
     public static class Utils
     {
+
         public static BigInteger ParseHexUnsigned(string toParse)
         {
             toParse = toParse.Replace("0x", "");
@@ -150,10 +151,10 @@ namespace LoopDropSharp
                 }
                 else
                 {
-                    Font.SetTextToYellow("Please answer 1 or 2.");
+                    Font.SetTextToYellow("Please answer 0 or 1.");
                     validOrNot = int.TryParse(Console.ReadLine()?.ToLower().Trim(), out userResponse);
                 }
-            } while (((userResponse != 1) && (userResponse != 2)) || validOrNot == false);
+            } while (((userResponse != 0) && (userResponse != 1)) || validOrNot == false);
 
             return userResponse;
         }
@@ -408,6 +409,34 @@ namespace LoopDropSharp
             if (banishAddress.Count > 0)
             {
                 Font.SetTextToRed($"The following were banish addresses that did not receive {transferTokenSymbol}.");
+                foreach (var address in banishAddress)
+                {
+                    Console.WriteLine(address);
+                }
+            }
+        }
+
+        public static void ShowAirdropAuditActivation(List<string> validAddress, List<string> invalidAddress, List<string> banishAddress, string transferTokenSymbol)
+        {
+            if (validAddress.Count > 0)
+            {
+                Font.SetTextToGreen($"The following were valid addresses that were activated.");
+                foreach (var address in validAddress)
+                {
+                    Console.WriteLine(address);
+                }
+            }
+            if (invalidAddress.Count > 0)
+            {
+                Font.SetTextToRed($"The following were invalid addresses that were not activated.");
+                foreach (var address in invalidAddress)
+                {
+                    Console.WriteLine(address);
+                }
+            }
+            if (banishAddress.Count > 0)
+            {
+                Font.SetTextToRed($"The following were banish addresses that were not activated.");
                 foreach (var address in banishAddress)
                 {
                     Console.WriteLine(address);

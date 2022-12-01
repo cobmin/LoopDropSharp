@@ -30,7 +30,7 @@ namespace LoopDropSharp.Helpers
             Font.SetTextToBlue("             __         __            ");
             Font.SetTextToBlue("|   _  _  _ |  \\ _ _  _(__ |_  _  _ _ ");
             Font.SetTextToBlue("|__(_)(_)[_)|__/[ (_)[_)__)[ )(_][ [_)");
-            Font.SetTextToBlue("         |           |Version 1.3.0|  ");
+            Font.SetTextToBlue("         |           |Version 1.5.0|  ");
             //Font.SetTextToDarkBlue("Query and send your Nfts");
             Font.SetTextToBlue("[Airdrop·Nfts·Crypto]");
             Console.WriteLine();
@@ -58,8 +58,9 @@ namespace LoopDropSharp.Helpers
                 {"utilityEleven", "Send all Nfts owned by banished addresses to the dead address"},
                 {"utilityTwelve", "Airdrop LRC/ETH to any users"},
                 {"utilityThirteen", "Airdrop LRC/ETH to any users with different amounts"},
-                {"utilityFourteen", "LoopPhunks Analytics"},
-                {"utilityFifteen", "Holders from an IMX collection"},
+                {"utilityFourteen", "Pay Loopring activation fee for wallets"},
+                {"utilityFifteen", "LoopPhunks Analytics"},
+                {"utilitySixteen", "Holders from an IMX collection"},
             };
             // Menu of the Utilities. need to be sure to change numbers here and in the CheckUtilityNumber
             Font.SetTextToBlue("This application can currently perform the following:");
@@ -73,7 +74,7 @@ namespace LoopDropSharp.Helpers
             Font.SetTextToWhite($"\t 5. {allUtilities.ElementAt(5).Value}.");
             Font.SetTextToWhite($"\t 6. {allUtilities.ElementAt(6).Value}.");
             Font.SetTextToWhite($"\t 7. {allUtilities.ElementAt(7).Value}.");
-            Font.SetTextToPurple("     Airdrops:");
+            Font.SetTextToPurple("     Transfers:");
             Font.SetTextToDarkPurple("        Nfts");
             Font.SetTextToWhite($"\t 8. {allUtilities.ElementAt(8).Value}.");
             Font.SetTextToWhite($"\t 9. {allUtilities.ElementAt(9).Value}.");
@@ -82,9 +83,10 @@ namespace LoopDropSharp.Helpers
             Font.SetTextToDarkPurple("        Crypto");
             Font.SetTextToWhite($"\t 12. {allUtilities.ElementAt(12).Value}.");
             Font.SetTextToWhite($"\t 13. {allUtilities.ElementAt(13).Value}.");
-            Font.SetTextToPurple("     LoopPhunks:");
             Font.SetTextToWhite($"\t 14. {allUtilities.ElementAt(14).Value}.");
+            Font.SetTextToPurple("     LoopPhunks:");
             Font.SetTextToWhite($"\t 15. {allUtilities.ElementAt(15).Value}.");
+            Font.SetTextToWhite($"\t 16. {allUtilities.ElementAt(16).Value}.");
             Font.SetTextToPurple("     Tips/FAQs:");
             Font.SetTextToWhite($"\t 0. {allUtilities.ElementAt(0).Value}.");
             Font.SetTextToGreen("Which would you like to do?");
