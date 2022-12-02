@@ -3,7 +3,7 @@
 
 ## Current Functionality:
 
-![image](https://user-images.githubusercontent.com/97369738/200132091-5887b31d-0255-47d1-86b9-8bb69a2e6c5e.png)
+![image](https://user-images.githubusercontent.com/97369738/205186643-dab2206e-76d4-42f4-96e9-42f547f4e93a.png)
 
 ## Setup
 
@@ -44,19 +44,19 @@ After setting up the appsettings.json, launch LoopDropSharp and get started.
 ### 2. Find Nft Datas from Nft Ids.
 In the Input.txt located in the project directory add Nft Ids. You will have one Nft Id per line.
 
-### 4. Find Nft Holders from Nft Data.
+### 5. Find Nft Holders from Nft Data.
 In the Input.txt located in the project directory add an Nft Data. You will have one Nft Data per line.
 
-### 6. Find Nft Holders who own all given Nft Data
+### 7. Find Nft Holders who own all given Nft Data
 In the Input.txt located in the project directory add an Nft Data. You will have one Nft Data per line.
 
-### 7. Airdrop the same NFT to any users.
+### 8. Airdrop the same NFT to any users.
 In the Input.txt located in the project directory add a wallet addresses. You will have one wallet address per line. Each wallet address will be one transfer. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
 
-### 8. Airdrop the same NFT to any users with different amounts.
+### 9. Airdrop the same NFT to any users with different amounts.
 In the Input.txt located in the project directory add a wallet address a comma and then the amount you want to send (example: 0x4a71e0267207cec67c78df8857d81c508d43b00d,2). You will have one wallet address and one amount per line. Each wallet address will be one transfer. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
 
-### 9. Airdrop unique NFTs to any users
+### 10. Airdrop unique NFTs to any users
 In the Input.txt located in the project directory add a wallet address a comma and then the nft data (example: 0x4a71e0267207cec67c78df8857d81c508d43b00d,0x103cb20d3b310873f711d25758d57f18ba77a6b7842ae605d662e0ddd908ed5a). You will have one wallet address and nft data per line. Each wallet address will be one transfer. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
 
 ### 12. Airdrop LRC/ETH to any users.
@@ -64,6 +64,9 @@ In the Input.txt located in the project directory add a wallet addresses. You wi
 
 ### 13. Airdrop LRC/ETH to any users with different amounts
 In the Input.txt located in the project directory add a wallet address a comma and then the amount of LRC/ETH to send (example: 0x4a71e0267207cec67c78df8857d81c508d43b00d,50.25). You will have one wallet address and one amount per line. Each wallet address will be one transfer. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
+
+### 14. Pay Loopring activation fee for wallets
+In the Input.txt located in the project directory add a wallet addresses. You will have one wallet address per line. Each wallet address will be one transfer of LRC/ETH. Be sure to have enough LRC/ETH for each transfer. You can add a long wallet address or the ENS.
 
 ## Banish.txt setup
 In the Banish.txt located in the project directory add wallet addresses that you do not want to send to. If you have a wallet address that you never want to airdrop an Nft to or send crypto to then you can place them on this list. The application checks this list before sending Nfts or crypto. You can add a long wallet address or the ENS.
