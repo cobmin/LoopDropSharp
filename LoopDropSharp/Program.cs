@@ -93,7 +93,7 @@ while (userResponseReadyToMoveOn == "yes")
     {
         #region case 0
         case "0":
-            Font.SetTextToBlue($"     {menuAndUtility.allUtilities.ElementAt(0).Value}");
+            Font.SetTextToBlue(menuAndUtility.allUtilities.ElementAt(0).Value);
             Font.SetTextToPurple("     What can this application do?");
             Font.SetTextToWhite("\t LoopDropSharp can airdrop Nfts and mass transfer Crypto");
             Font.SetTextToWhite("\t You can find who holds a specifc Nft and easily reward");
@@ -107,13 +107,14 @@ while (userResponseReadyToMoveOn == "yes")
             Font.SetTextToPurple("     Is Nft Data and same as Nft Id?");
             Font.SetTextToWhite("\t Nft Data is not the same as an Nft Id, but Nft Data comes");
             Font.SetTextToWhite("\t from an Nft Id.");
-            Font.SetTextToWhite("\t You can find the Nft Id on any Loopring Explorer and.");
+            Font.SetTextToWhite("\t You can find the Nft Id on any Loopring Explorer and");
             Font.SetTextToWhite("\t typically any marketplace.");
             Console.WriteLine();
             Font.SetTextToPurple("     What wallet can I use to Airdrop and transfer?");
             Font.SetTextToWhite("\t You can use a MetaMask wallet or a GameStop Wallet.");
             Font.SetTextToWhite("\t For those wondering, unfortunately, you cannot use a");
             Font.SetTextToWhite("\t Loopring wallet to perform Airdrops.");
+            Console.WriteLine();
             break;
         #endregion
         #region case 1

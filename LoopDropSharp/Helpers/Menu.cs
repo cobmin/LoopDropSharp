@@ -34,7 +34,7 @@ namespace LoopDropSharp.Helpers
             //Font.SetTextToDarkBlue("Query and send your Nfts");
             Font.SetTextToBlue("[Airdrop·Nfts·Crypto]");
             Console.WriteLine();
-            Font.SetTextToDarkGray("If you have any questions, start at https://cobmin.io/posts/Airdrop-Nfts-on-Loopring");
+            Font.SetTextToDarkGray("If you have any questions, start at https://cobmin.io/posts/LoopDropSharp");
             Font.SetREADMEFontColorDarkGray("Find information on the setup files in the ", "README", " at https://github.com/cobmin/LoopDropSharp/blob/master/README.md");
             Font.SetTextToGreen("Ready to start?");
             var userResponseReadyToMoveOn = Utils.CheckYes();
